@@ -229,6 +229,7 @@ public class EsUtil {
 			bqb.must(QueryBuilders.matchQuery("product_type", requestMap.get("productType")));//活动类型
 			bqb.must(QueryBuilders.matchQuery("product_id", requestMap.get("productId"))); //活动ID
 		}
+		
 		return bqb;
 	}
 	
@@ -794,7 +795,9 @@ public class EsUtil {
 	
 	public static BoolQueryBuilder multiAgentBqb(Map<String, Object> requestMap) {
 		BoolQueryBuilder bqb = QueryBuilders.boolQuery();
-		bqb.must(QueryBuilders.rangeQuery("start_time.keyword").gte(requestMap.get("startDate")).lte(requestMap.get("endDate"))); //gt:大于 lt:小于
+		if (null != requestMap.get("startDate")) {
+			bqb.must(QueryBuilders.rangeQuery("start_time.keyword").gte(requestMap.get("startDate")).lte(requestMap.get("endDate"))); //gt:大于 lt:小于
+		}
 		bqb.must(QueryBuilders.matchQuery("org_id", requestMap.get("orgId"))); 
 		bqb.must(QueryBuilders.matchQuery("event_type", "ViewProduct")); 
 		if (null != requestMap.get("agentIds")) {
@@ -831,7 +834,9 @@ public class EsUtil {
 	 */
 	public static BoolQueryBuilder orderAgentBqb(Map<String, Object> requestMap) {
 		BoolQueryBuilder bqb = QueryBuilders.boolQuery();
-		bqb.must(QueryBuilders.rangeQuery("end_time.keyword").gte(requestMap.get("startDate")).lte(requestMap.get("endDate"))); //gt:大于 lt:小于
+		if (null != requestMap.get("startDate")) {
+			bqb.must(QueryBuilders.rangeQuery("end_time.keyword").gte(requestMap.get("startDate")).lte(requestMap.get("endDate"))); //gt:大于 lt:小于
+		}
 		bqb.must(QueryBuilders.matchQuery("org_id", requestMap.get("orgId"))); //组织ID
 		if(null != requestMap.get("agentIds")) {
 			if(!"all".equals(requestMap.get("productType"))) {

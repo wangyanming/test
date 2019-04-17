@@ -17,6 +17,7 @@ import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.LongTerms.Bucket;
 import org.elasticsearch.search.aggregations.metrics.cardinality.InternalCardinality;
 import org.elasticsearch.search.aggregations.metrics.sum.InternalSum;
@@ -41,13 +42,25 @@ public class IGetUserDataServiceImpl implements GetUserDataService{
 		
 		SearchResponse orderSr = EsClient.getConnect().prepareSearch("order")
 				.setQuery(EsUtil.orderBqb(requestMap))
-				.setExplain(false)
-				.setFetchSource("user_id", "")
-				.setSize(100000).get();
+				.addAggregation(AggregationBuilders
+						.terms("userCnt")
+						.field("user_id").size(1000000))
+				.get();
 		
 		for (SearchHit srHit : orderSr.getHits().getHits()) {
 			list.add(srHit.getSourceAsMap().get("user_id"));
 		}
+		
+		SearchResponse orderSr1 = EsClient.getConnect().prepareSearch("order")
+				.setQuery(EsUtil.orderBqb(requestMap))
+				.addAggregation(AggregationBuilders
+						.terms("userCnt")
+						.field("user_id").size(1000000))
+				.get();
+		
+		Terms agg = orderSr1.getAggregations().get("userCnt");
+		System.out.println(agg.getBuckets().size());
+		System.out.println(agg.getSumOfOtherDocCounts());
 		
 		//去重
 		List<Object> sortedList = list.stream().distinct().collect(Collectors.toList());

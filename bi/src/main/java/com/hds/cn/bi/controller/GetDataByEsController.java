@@ -41,7 +41,7 @@ public class GetDataByEsController extends BaseController{
 	private GetDataByEsService getDataByEsService;
 	
 	@ResponseBody
-	@RequestMapping(value = "getTotalbyDay", method = RequestMethod.POST)
+	@RequestMapping(value = "getTotalbyDay", method = {RequestMethod.POST, RequestMethod.GET})
 	public ResponseUtil<Map<String, Object>> getTotalbyDay(@RequestBody String info) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {

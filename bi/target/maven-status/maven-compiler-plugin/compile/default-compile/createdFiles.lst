@@ -1,7 +1,6 @@
 com\hds\cn\bi\controller\GetUserDataController.class
 com\hds\cn\bi\service\impl\IGetLightActivityDataServiceImpl.class
 com\hds\cn\bi\vo\AgentDataVo.class
-com\hds\cn\bi\SpringBootStartApplication.class
 com\hds\cn\bi\vo\BuyRateVo.class
 com\hds\cn\bi\vo\AgentVo.class
 com\hds\cn\bi\vo\TotalOrgVo.class

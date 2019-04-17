@@ -28,4 +28,9 @@ public interface CommonConstant {
 	
 	public final String REGIST = "regist";
 	
+	/**
+	 * es单个索引的最大文本数
+	 */
+	public final int MAX_RESULT_WINDOW = 0x7fffffff;
+	
 }

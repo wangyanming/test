@@ -7,7 +7,10 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
+@ComponentScan
 public class EsClient {
 	//private static final String HOST = "192.168.1.201";
 	//private static final String HOST = "192.168.0.29";
@@ -26,6 +29,7 @@ public class EsClient {
 	}
 	
 	@SuppressWarnings("resource")
+	@Bean(destroyMethod = "close", initMethod = "init")
 	public static TransportClient getConnect() {
 		if (client == null) {
 			synchronized (EsClient.class) {

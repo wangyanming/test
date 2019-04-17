@@ -178,10 +178,12 @@ public class IGetLightActivityDataServiceImpl implements GetLightActivityDataSer
 	public Map<String, Object> getTotalData(Map<String, Object> requestMap) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		double freight_money = 0;
+		
 		String startDate = DateUtil.dateStampToDay(System.currentTimeMillis());
 		String endDate = DateUtil.dateAdd(DateUtil.dateStampToDay(System.currentTimeMillis()));
 		requestMap.put("startDate", startDate);
 		requestMap.put("endDate", endDate);
+		
 		//今日新增用户数
 		SearchResponse newUserSr = EsClient.getConnect().prepareSearch("regist")
 				.setQuery(EsUtil.signBqb(requestMap))
@@ -197,15 +199,14 @@ public class IGetLightActivityDataServiceImpl implements GetLightActivityDataSer
 		//今日成功订单数、金额、商品数量
 		SearchResponse newOrderSr = EsClient.getConnect().prepareSearch("order")
 				.setQuery(EsUtil.orderBqb(requestMap))
-				.addAggregation(AggregationBuilders.count("orderCnt").field("order_id"))
-				.addAggregation(AggregationBuilders.sum("orderAmount").field("order_amount"))
-				//.addAggregation(AggregationBuilders.sum("productCnt").field("product_num"))
+				.addAggregation(AggregationBuilders.sum("orderAmount").field("order_amount")) 
+				.addAggregation(AggregationBuilders.cardinality("orderCnt").field("batch_id"))
 				.get();
 		
 		//累计成功订单数
 		SearchResponse totalOrderSr = EsClient.getConnect().prepareSearch("order")
 				.setQuery(EsUtil.orderTotalBqb(requestMap))
-				.addAggregation(AggregationBuilders.count("orderCnt").field("order_id"))
+				.addAggregation(AggregationBuilders.count("orderCnt").field("batch_id"))
 				.get();
 		
 		//查询今日运费
@@ -232,10 +233,15 @@ public class IGetLightActivityDataServiceImpl implements GetLightActivityDataSer
 		}
 		double orderAmount = (double)((InternalSum)newOrderSr.getAggregations().asMap().get("orderAmount")).getValue();
 		
+		//今日新增用户
 		resultMap.put("newUser", ((InternalCardinality)newUserSr.getAggregations().asMap().get("registCnt")).getValue());
+		//累计新增用户
 		resultMap.put("totalUser", ((InternalCardinality)totalUserSr.getAggregations().asMap().get("registCnt")).getValue());
-		resultMap.put("newOrderCnt", ((InternalValueCount)newOrderSr.getAggregations().asMap().get("orderCnt")).getValue());
+		//今日订单数
+		resultMap.put("newOrderCnt", ((InternalCardinality)newOrderSr.getAggregations().asMap().get("orderCnt")).getValue());
+		//今日订单金额
 		resultMap.put("newOrderAmount", df.format(orderAmount + freight_money));
+		//累计订单数
 		resultMap.put("totalOrderCnt", ((InternalValueCount)totalOrderSr.getAggregations().asMap().get("orderCnt")).getValue());
 		return resultMap;
 	}
@@ -262,7 +268,7 @@ public class IGetLightActivityDataServiceImpl implements GetLightActivityDataSer
 				.setQuery(EsUtil.orderAgentBqb(requestMap))
 				.addAggregation(EsUtil.orderAgentAb(requestMap))
 				.get();
-
+		
 		//查询运费
 		SearchResponse batchSr = EsClient.getConnect().prepareSearch("order")
 				.setQuery(EsUtil.orderAgentBqb(requestMap))
