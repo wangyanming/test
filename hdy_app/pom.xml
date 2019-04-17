@@ -1,0 +1,162 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.hds</groupId>
+  <artifactId>hdyapp</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>hdy_app</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <dependencyManagement>  
+     <dependencies>  
+        <dependency>  
+            <groupId>org.springframework.boot</groupId>  
+            <artifactId>spring-boot-dependencies</artifactId>  
+            <version>2.1.0.RELEASE</version>  
+            <type>pom</type>  
+            <scope>import</scope>  
+        </dependency>
+    </dependencies>  
+  </dependencyManagement>
+  
+  <build>
+      <finalName>hdy_app</finalName>
+	  <plugins>
+	      <plugin>
+	          <groupId>org.springframework.boot</groupId>
+	          <artifactId>spring-boot-maven-plugin</artifactId>
+	          <configuration>
+	          	<fork>true</fork>
+	          </configuration>
+	          <executions>
+                <execution>
+                    <goals>
+                        <goal>repackage</goal>
+                    </goals>
+                </execution>
+              </executions>
+	      </plugin>
+	  </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+          <exclusion>
+              <groupId>org.elasticsearch</groupId>
+              <artifactId>elasticsearch</artifactId>
+          </exclusion>
+          <exclusion>
+              <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+              <groupId>org.springframework.boot</groupId>
+          </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-actuator</artifactId>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-core -->
+	<dependency>
+	    <groupId>com.sun.jersey</groupId>
+	    <artifactId>jersey-core</artifactId>
+	    <version>1.13-b01</version>
+	</dependency>
+	
+    <dependency>
+	  <groupId>org.elasticsearch.client</groupId>
+	  <artifactId>transport</artifactId>
+	  <version>6.0.1</version>
+	</dependency>
+	<dependency>
+       <groupId>org.elasticsearch.plugin</groupId>
+       <artifactId>transport-netty4-client</artifactId>
+       <version>6.0.1</version>
+     </dependency>
+	
+	<dependency>
+	  <groupId>org.elasticsearch</groupId>
+	  <artifactId>elasticsearch</artifactId>
+	  <version>6.0.1</version>
+	</dependency>
+	
+    <dependency>
+  	  <groupId>org.elasticsearch</groupId>  
+  	  <artifactId>elasticsearch-hadoop</artifactId>
+  	  <version>6.0.1</version>
+	</dependency>
+	<dependency>
+  	  <groupId>org.elasticsearch</groupId>
+	  <artifactId>elasticsearch-hadoop-mr</artifactId>
+	  <version>6.0.1</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.elasticsearch</groupId>
+	  <artifactId>elasticsearch-hadoop-hive</artifactId>
+	  <version>6.0.1</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.elasticsearch</groupId>
+	  <artifactId>elasticsearch-hadoop-cascading</artifactId>
+	  <version>6.0.1</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.elasticsearch</groupId>
+	  <artifactId>elasticsearch-storm</artifactId>
+	  <version>6.0.1</version>
+	</dependency>
+	<dependency>
+      <groupId>net.sf.json-lib</groupId>
+      <artifactId>json-lib</artifactId>
+      <version>2.4</version>
+      <classifier>jdk15</classifier>
+    </dependency>
+    <dependency>
+	  <groupId>org.apache.poi</groupId>
+	  <artifactId>poi</artifactId>
+	  <version>3.9</version>
+	</dependency>
+     <dependency>
+	  <groupId>org.apache.poi</groupId>
+	  <artifactId>poi-ooxml-schemas</artifactId>
+	  <version>3.9</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.poi</groupId>
+	  <artifactId>poi-ooxml</artifactId>
+	  <version>3.9</version>
+	</dependency> 
+	<!-- <dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
+	</dependency> -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<scope>provided</scope>
+    </dependency>
+    <dependency>
+	    <groupId>com.alibaba</groupId>
+	    <artifactId>fastjson</artifactId>
+	    <version>1.2.46</version>
+	</dependency> 
+	
+	<!-- alibaba sentinel -->
+	<dependency>
+	    <groupId>com.alibaba.csp</groupId>
+	    <artifactId>sentinel-transport-simple-http</artifactId>
+	    <version>1.4.0</version>
+	</dependency>
+  </dependencies>
+</project>
