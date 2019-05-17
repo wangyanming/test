@@ -1,49 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-	<appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-			</pattern>
-		</layout>
+	<property name="LOG_HOME" value="/home/web/logs/bi" />
+
+	<!-- 控制台日志 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度，%M：方法名，%L行号， %msg：日志消息，%n是换行符-->
+			<!-- <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{200} - %msg%n</pattern> -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{200}.%M:%L - %msg%xEx%n</pattern>
+		</encoder>
 	</appender>
 	
-	<appender name="fileInfoLog"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<!-- 按照每天生成日志文件 -->
+	<appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
 			<level>ERROR</level>
 			<onMatch>DENY</onMatch>
 			<onMismatch>ACCEPT</onMismatch>
 		</filter>
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-			</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{200}.%M:%L - %msg%xEx%n</pattern>
 		</encoder>
 		<!--滚动策略 -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!--路径 -->
-			<fileNamePattern>/home/web/logs/bi/info.%d.log</fileNamePattern>
+			<fileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- 日志文件保留天数 -->
+			<MaxHistory>30</MaxHistory>
 		</rollingPolicy>
+		<!--日志文件最大的大小-->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>100MB</MaxFileSize>
+		</triggeringPolicy>
 	</appender>
 	
-	<appender name="fileErrorLog"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>ERROR</level>
 		</filter>
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-			</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{200}.%M:%L - %msg%xEx%n</pattern>
 		</encoder>
 		<!--滚动策略 -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!--路径 -->
-			<fileNamePattern>/home/web/logs/bi/error.%d.log</fileNamePattern>
+			<fileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- 日志文件保留天数 -->
+			<MaxHistory>30</MaxHistory>
 		</rollingPolicy>
+		<!--日志文件最大的大小-->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>100MB</MaxFileSize>
+		</triggeringPolicy>
 	</appender>
 	
-	<root level="info">
+	<!-- <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
 		<appender-ref ref="consoleLog" />
-		<appender-ref ref="fileInfoLog" />
-		<appender-ref ref="fileErrorLog" />
+		<includeCallerData>true</includeCallerData>
+    </appender> -->
+	
+	<root level="INFO">
+		<!-- <appender-ref ref="stdout" /> -->
+		<!-- <appender-ref ref="ASYNC" /> -->
+		<!-- <appender-ref ref="debug_async" />-->
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="INFO" />
+		<appender-ref ref="ERROR" />
 	</root>
 </configuration>
